@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Nethneth 💚</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#ff9a9e,#fad0c4);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* ENVELOPE */
+.envelope{
+    width:320px;
+    height:220px;
+    background:#ff4d6d;
+    border-radius:15px;
+    text-align:center;
+    color:white;
+    padding-top:60px;
+    cursor:pointer;
+    box-shadow:0 0 20px rgba(255,77,109,0.8);
+    position:relative;
+    overflow:hidden;
+}
+
+/* Envelope flap animation */
+.envelope::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:50%;
+    background:#ff3355;
+    transform-origin:top;
+    transition:1s;
+}
+
+.envelope.open::before{
+    transform:rotateX(180deg);
+}
+
+.lockIcon{
+    font-size:40px;
+}
+
+/* QUESTION BOX */
+.questionBox{
+    display:none;
+    width:320px;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
+
+/* LETTER */
+.letter{
+    display:none;
+    width:320px;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
+}
+
+/* NAME */
+.name{
+    font-size:26px;
+    font-weight:bold;
+    color:#ff4d6d;
+    margin-bottom:10px;
+}
+
+/* TYPEWRITER */
+#typeText{
+    min-height:80px;
+}
+
+/* BUTTONS */
+button{
+    padding:8px 15px;
+    margin:10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.yesBtn{
+    background:#ff4d6d;
+    color:white;
+}
+
+.noBtn{
+    background:gray;
+    color:white;
+    position:relative;
+}
+
+/* SLIDESHOW */
+.gallery{
+    width:100%;
+    height:220px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+}
+
+.gallery img{
+    max-width:100%;
+    max-height:100%;
+    object-fit:contain;
+    border-radius:10px;
+    transition:0.6s;
+}
+
+.loveBtn{
+    background:#ff4d6d;
+    color:white;
+}
+
+/* MOBILE */
+@media(max-width:400px){
+    .envelope,.questionBox,.letter{
+        width:90%;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ENVELOPE -->
+<div class="envelope" onclick="openEnvelope()" id="envelope">
+    <div class="lockIcon">🔒</div>
+    <h3>Locked Love Letter</h3>
+    <p>Click to Unlock 💌</p>
+</div>
+
+<!-- QUESTIONS -->
+<div class="questionBox" id="questionBox">
+    <h3 id="questionText"></h3>
+
+    <button class="yesBtn" onclick="nextQuestion()">Yes 💚</button>
+    <button class="noBtn" id="noBtn">No 😢</button>
+</div>
+
+<!-- LETTER -->
+<div class="letter" id="letter">
+
+    <div class="name">💚 Nethneth</div>
+
+    <p id="typeText"></p>
+
+    <div class="gallery">
+        <img id="slide" src="0.jpg">
+    </div>
+
+    <button class="loveBtn" onclick="loveSurprise()">Click Me 💘</button>
+
+</div>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+    <source src="Music.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+/* Envelope animation */
+function openEnvelope(){
+    let env = document.getElementById("envelope");
+    env.classList.add("open");
+
+    setTimeout(()=>{
+        env.style.display="none";
+        document.getElementById("questionBox").style.display="block";
+        showQuestion();
+    },1000);
+}
+
+/* QUESTIONS */
+let questions = [
+    "Gwapa si Xhang? 😏",
+    "Love mo si Xhang? 💕"
+];
+
+let qIndex = 0;
+
+function showQuestion(){
+    document.getElementById("questionText").innerText = questions[qIndex];
+}
+
+function nextQuestion(){
+    qIndex++;
+
+    if(qIndex < questions.length){
+        showQuestion();
+    }
+    else{
+        document.getElementById("questionBox").style.display="none";
+        document.getElementById("letter").style.display="block";
+
+        document.getElementById("bgMusic").play().catch(()=>{});
+
+        typeWriter();
+        startSlide();
+    }
+}
+
+/* Moving NO button */
+let noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("mouseover", ()=>{
+    let x = Math.random()*200 - 100;
+    let y = Math.random()*200 - 100;
+
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
+});
+
+/* TYPEWRITER EFFECT */
+let message = "Every moment with you is special to me. Thank you for loving me and staying by my side. More patience sa mga kaartehan and sinuplada ko pa. I love you always 💚.";
+
+let i = 0;
+
+function typeWriter(){
+    if(i < message.length){
+        document.getElementById("typeText").innerHTML += message.charAt(i);
+        i++;
+        setTimeout(typeWriter,40);
+    }
+}
+
+/* SLIDESHOW */
+let pics = ["0.jpg","1.jpg","2.jpg","3.jpg","4.jpg","5.jpg","6.jpg","7.jpg","8.jpg","9.jpg","10.jpg","11.jpg","12.jpg","13.jpg","14.jpg"];
+
+let index = 0;
+let slideInterval;
+
+function startSlide(){
+
+    if(slideInterval) return;
+
+    slideInterval = setInterval(()=>{
+        index = (index+1)%pics.length;
+        document.getElementById("slide").src = pics[index];
+    },3000);
+}
+
+/* SURPRISE */
+function loveSurprise(){
+    alert("I LOVE YOU SO MUCH NETHNETH 💚🥰");
+}
+
+</script>
+
+</body>
+</html>
